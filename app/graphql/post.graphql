@@ -1,0 +1,6 @@
+query Post($idx: Int!) {
+  post(idx: $idx) {
+    idx
+    contents
+  }
+}

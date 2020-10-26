@@ -10,7 +10,6 @@ export default function Home() {
 
   return (
     <div>
-      sdd
       {tasks && tasks.length > 0 && tasks.map((task) => {
         return (
           <div key={task.id}>

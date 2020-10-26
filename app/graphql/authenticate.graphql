@@ -1,0 +1,8 @@
+query Authenticate($input: AuthenticateInput!) {
+	authenticate(input: $input) {
+    idx
+    username
+    email
+    hashed_password
+  }
+}

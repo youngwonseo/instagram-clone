@@ -16,6 +16,7 @@
     "next": "9.5.5",
     "react": "16.14.0",
     "react-dom": "16.14.0",
+    "sequelize-typescript": "^1.1.0",
     "serverless-mysql": "^1.5.4",
     "styled-components": "^5.2.0"
   },

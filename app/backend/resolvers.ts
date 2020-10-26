@@ -2,10 +2,13 @@ import { Resolvers, TaskStatus } from "../generated/graphql-backend";
 import { ServerlessMysql } from 'serverless-mysql';
 import { OkPacket} from 'mysql';
 import { UserInputError } from "apollo-server-micro";
+import { isContext } from "vm";
 
 interface ApolloContext {
   db: ServerlessMysql;
 }
+
+
 
 interface TaskDbRow {
   id: number;
@@ -16,6 +19,42 @@ interface TaskDbRow {
 type TasksDbQueryResult = TaskDbRow[];
 
 type TaskDbQueryResult = TaskDbRow[];
+
+
+/** User */
+interface UserDbRow {
+  idx: number;
+  username: string;
+  email: string;
+  hashed_password: string;
+}
+
+
+/** Post */
+interface PostDbRow {
+  idx: number;
+  contents: string;
+}
+
+type PostsDbQueryResult = PostDbRow[];
+
+
+
+
+/** Follow */
+
+
+
+/** Image */
+
+
+/** File */
+
+/** HashTag */
+
+
+
+
 
 const getTaskById = async (id: number, db: ServerlessMysql ) => {
   const tasks = await db.query<TaskDbQueryResult>(
@@ -31,8 +70,20 @@ const getTaskById = async (id: number, db: ServerlessMysql ) => {
     : null;
 }
 
-export  const resolvers: Resolvers<ApolloContext> = {
+
+export const resolvers: Resolvers<ApolloContext> = {
   Query: {
+    //codegen 후 params의 타입이 정해짐
+    async authenticate(parent, args, context) {
+      const user = await context.db.query<UserDbRow>(
+        'SELECT username FROM users WHERE email = ? and hashed_password = ?',
+        [args.input.email, args.input.password]
+      );
+      return user;
+    },
+    // me(parent, args, context) {
+
+    // },
     //parent는 User object
     async tasks(parent, args, context) {
       const { status } = args;
@@ -54,8 +105,17 @@ export  const resolvers: Resolvers<ApolloContext> = {
       }));
     },
     async task(parent, args, context) {
-      return await getTaskById(args.id, context.db);
+      // return await getTaskById(args.id, context.db);
+      return null;
     },
+    async post() {
+      return null;
+    },
+    async posts(parent, args, context) {
+      const posts = await context.db.query<PostsDbQueryResult>('SELECT * FROM posts');
+      await context.db.end();
+      return posts;
+    }
   },
   Mutation: {
     async createTask(parent, args: { input: { title: string } }, context) {

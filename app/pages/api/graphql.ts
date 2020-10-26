@@ -3,9 +3,6 @@ import { db } from '../../backend/db';
 import { schema } from '../../backend/schema';
 
 
-
-
-
 const apolloServer = new ApolloServer({ schema, context: { db } })
 
 export const config = {

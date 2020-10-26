@@ -11,6 +11,11 @@ export type Scalars = {
   Float: number;
 };
 
+export type AuthenticateInput = {
+  email: Scalars['String'];
+  password: Scalars['String'];
+};
+
 export enum TaskStatus {
   Active = 'active',
   Completed = 'completed'
@@ -33,10 +38,43 @@ export type UpdateTaskInput = {
   status?: Maybe<TaskStatus>;
 };
 
+export type CreatePostInput = {
+  contents: Scalars['String'];
+};
+
+export type UpdatePostInput = {
+  idx: Scalars['Int'];
+  contents: Scalars['String'];
+};
+
+export type User = {
+  __typename?: 'User';
+  idx: Scalars['Int'];
+  username: Scalars['String'];
+  email: Scalars['String'];
+  hashed_password: Scalars['String'];
+};
+
+export type Post = {
+  __typename?: 'Post';
+  idx: Scalars['Int'];
+  contents: Scalars['String'];
+};
+
 export type Query = {
   __typename?: 'Query';
+  authenticate?: Maybe<User>;
+  me?: Maybe<User>;
+  users?: Maybe<Array<Maybe<User>>>;
   tasks: Array<Task>;
   task?: Maybe<Task>;
+  posts: Array<Post>;
+  post?: Maybe<Post>;
+};
+
+
+export type QueryAuthenticateArgs = {
+  input: AuthenticateInput;
 };
 
 
@@ -49,11 +87,19 @@ export type QueryTaskArgs = {
   id: Scalars['Int'];
 };
 
+
+export type QueryPostArgs = {
+  idx: Scalars['Int'];
+};
+
 export type Mutation = {
   __typename?: 'Mutation';
   createTask?: Maybe<Task>;
   updateTask?: Maybe<Task>;
   deleteTask?: Maybe<Task>;
+  createPost?: Maybe<Post>;
+  updatePost?: Maybe<Post>;
+  deletePost?: Maybe<Post>;
 };
 
 
@@ -69,6 +115,21 @@ export type MutationUpdateTaskArgs = {
 
 export type MutationDeleteTaskArgs = {
   id: Scalars['Int'];
+};
+
+
+export type MutationCreatePostArgs = {
+  input: CreatePostInput;
+};
+
+
+export type MutationUpdatePostArgs = {
+  input: UpdatePostInput;
+};
+
+
+export type MutationDeletePostArgs = {
+  idx: Scalars['Int'];
 };
 
 export type WithIndex<TObject> = TObject & Record<string, any>;
@@ -150,12 +211,17 @@ export type DirectiveResolverFn<TResult = {}, TParent = {}, TContext = {}, TArgs
 
 /** Mapping between all available schema types and the resolvers types */
 export type ResolversTypes = ResolversObject<{
+  AuthenticateInput: AuthenticateInput;
+  String: ResolverTypeWrapper<Scalars['String']>;
   TaskStatus: TaskStatus;
   Task: ResolverTypeWrapper<Task>;
   Int: ResolverTypeWrapper<Scalars['Int']>;
-  String: ResolverTypeWrapper<Scalars['String']>;
   CreateTaskInput: CreateTaskInput;
   UpdateTaskInput: UpdateTaskInput;
+  CreatePostInput: CreatePostInput;
+  UpdatePostInput: UpdatePostInput;
+  User: ResolverTypeWrapper<User>;
+  Post: ResolverTypeWrapper<Post>;
   Query: ResolverTypeWrapper<{}>;
   Mutation: ResolverTypeWrapper<{}>;
   Boolean: ResolverTypeWrapper<Scalars['Boolean']>;
@@ -163,11 +229,16 @@ export type ResolversTypes = ResolversObject<{
 
 /** Mapping between all available schema types and the resolvers parents */
 export type ResolversParentTypes = ResolversObject<{
+  AuthenticateInput: AuthenticateInput;
+  String: Scalars['String'];
   Task: Task;
   Int: Scalars['Int'];
-  String: Scalars['String'];
   CreateTaskInput: CreateTaskInput;
   UpdateTaskInput: UpdateTaskInput;
+  CreatePostInput: CreatePostInput;
+  UpdatePostInput: UpdatePostInput;
+  User: User;
+  Post: Post;
   Query: {};
   Mutation: {};
   Boolean: Scalars['Boolean'];
@@ -180,19 +251,43 @@ export type TaskResolvers<ContextType = any, ParentType extends ResolversParentT
   __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 }>;
 
+export type UserResolvers<ContextType = any, ParentType extends ResolversParentTypes['User'] = ResolversParentTypes['User']> = ResolversObject<{
+  idx?: Resolver<ResolversTypes['Int'], ParentType, ContextType>;
+  username?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
+  email?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
+  hashed_password?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
+  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
+}>;
+
+export type PostResolvers<ContextType = any, ParentType extends ResolversParentTypes['Post'] = ResolversParentTypes['Post']> = ResolversObject<{
+  idx?: Resolver<ResolversTypes['Int'], ParentType, ContextType>;
+  contents?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
+  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
+}>;
+
 export type QueryResolvers<ContextType = any, ParentType extends ResolversParentTypes['Query'] = ResolversParentTypes['Query']> = ResolversObject<{
+  authenticate?: Resolver<Maybe<ResolversTypes['User']>, ParentType, ContextType, RequireFields<QueryAuthenticateArgs, 'input'>>;
+  me?: Resolver<Maybe<ResolversTypes['User']>, ParentType, ContextType>;
+  users?: Resolver<Maybe<Array<Maybe<ResolversTypes['User']>>>, ParentType, ContextType>;
   tasks?: Resolver<Array<ResolversTypes['Task']>, ParentType, ContextType, RequireFields<QueryTasksArgs, never>>;
   task?: Resolver<Maybe<ResolversTypes['Task']>, ParentType, ContextType, RequireFields<QueryTaskArgs, 'id'>>;
+  posts?: Resolver<Array<ResolversTypes['Post']>, ParentType, ContextType>;
+  post?: Resolver<Maybe<ResolversTypes['Post']>, ParentType, ContextType, RequireFields<QueryPostArgs, 'idx'>>;
 }>;
 
 export type MutationResolvers<ContextType = any, ParentType extends ResolversParentTypes['Mutation'] = ResolversParentTypes['Mutation']> = ResolversObject<{
   createTask?: Resolver<Maybe<ResolversTypes['Task']>, ParentType, ContextType, RequireFields<MutationCreateTaskArgs, 'input'>>;
   updateTask?: Resolver<Maybe<ResolversTypes['Task']>, ParentType, ContextType, RequireFields<MutationUpdateTaskArgs, 'input'>>;
   deleteTask?: Resolver<Maybe<ResolversTypes['Task']>, ParentType, ContextType, RequireFields<MutationDeleteTaskArgs, 'id'>>;
+  createPost?: Resolver<Maybe<ResolversTypes['Post']>, ParentType, ContextType, RequireFields<MutationCreatePostArgs, 'input'>>;
+  updatePost?: Resolver<Maybe<ResolversTypes['Post']>, ParentType, ContextType, RequireFields<MutationUpdatePostArgs, 'input'>>;
+  deletePost?: Resolver<Maybe<ResolversTypes['Post']>, ParentType, ContextType, RequireFields<MutationDeletePostArgs, 'idx'>>;
 }>;
 
 export type Resolvers<ContextType = any> = ResolversObject<{
   Task?: TaskResolvers<ContextType>;
+  User?: UserResolvers<ContextType>;
+  Post?: PostResolvers<ContextType>;
   Query?: QueryResolvers<ContextType>;
   Mutation?: MutationResolvers<ContextType>;
 }>;
