@@ -34,6 +34,7 @@ interface UserDbRow {
 interface PostDbRow {
   idx: number;
   contents: string;
+  writer_idx: any;
 }
 
 type PostsDbQueryResult = PostDbRow[];
@@ -76,7 +77,7 @@ export const resolvers: Resolvers<ApolloContext> = {
     //codegen 후 params의 타입이 정해짐
     async authenticate(parent, args, context) {
       const user = await context.db.query<UserDbRow>(
-        'SELECT username FROM users WHERE email = ? and hashed_password = ?',
+        "SELECT username FROM users WHERE email = ? and hashed_password = ?",
         [args.input.email, args.input.password]
       );
       return user;
@@ -112,10 +113,12 @@ export const resolvers: Resolvers<ApolloContext> = {
       return null;
     },
     async posts(parent, args, context) {
-      const posts = await context.db.query<PostsDbQueryResult>('SELECT * FROM posts');
+      const posts = await context.db.query<PostsDbQueryResult>(
+        "SELECT * FROM posts"
+      );
       await context.db.end();
       return posts;
-    }
+    },
   },
   Mutation: {
     async createTask(parent, args: { input: { title: string } }, context) {
@@ -134,18 +137,18 @@ export const resolvers: Resolvers<ApolloContext> = {
       const sqlParams: any[] = [];
 
       if (args.input.title) {
-        columns.push('title = ?');
+        columns.push("title = ?");
         sqlParams.push(args.input.title);
       }
 
       if (args.input.status) {
-        columns.push('task_status = ?');
+        columns.push("task_status = ?");
         sqlParams.push(args.input.status);
       }
 
       sqlParams.push(args.input.id);
       await context.db.query<OkPacket>(
-        `UPDATE tasks SET ${columns.join(',')} WHERE id = ?`,
+        `UPDATE tasks SET ${columns.join(",")} WHERE id = ?`,
         sqlParams
       );
 
@@ -155,10 +158,53 @@ export const resolvers: Resolvers<ApolloContext> = {
     async deleteTask(parent, args, context) {
       const task = await getTaskById(args.id, context.db);
       if (!task) {
-        throw new UserInputError('Could not find your task.');
+        throw new UserInputError("Could not find your task.");
       }
-      await context.db.query('DELETE FROM tasks WHERE id = ?', [args.id]);
+      await context.db.query("DELETE FROM tasks WHERE id = ?", [args.id]);
       return task;
     },
+    async createPost(parent, args: { input: { contents: string } }, context) {
+      const result = await context.db.query<OkPacket>(
+        "INSERT INTO posts (contents, writer_idx) VALUES(?, ?)",
+        [args.input.contents, 1]
+      );
+      return {
+        idx: result.insertId,
+        contents: args.input.contents,
+        writer_idx: 1,
+      };
+    },
+    async updatePost(parent, args: { input: { idx: number, contents: string } }, context) {
+      const result = await context.db.query(
+        "UPDATE posts SET contents = ? WHERE idx = ? ",
+        [args.input.contents, args.input.idx]
+      );
+
+      const updatedPost = await context.db.query<PostsDbQueryResult>(
+        "SELECT * FROM posts WHERE idx = ? ",
+        [args.input.idx]
+      );
+      return updatedPost.length > 0 ? {
+        idx: updatedPost[0].idx,
+        contents: updatedPost[0].contents,
+        writer_idx: updatedPost[0].writer_idx
+      } : null;
+    },
+    async deletePost(parent, args, context){
+      const posts = await context.db.query<PostsDbQueryResult>(
+        "SELECT * FROM posts WHERE idx = ? ",
+        [args.idx]
+      );
+
+      if(posts.length > 0){
+        await context.db.query('DELETE FROM posts WHERE idx = ? ', [args.idx]);
+      }
+
+      return posts.length > 0 ? {
+        idx: posts[0].idx,
+        contents: posts[0].contents,
+        writer_idx: posts[0].writer_idx
+      } : null;
+    }
   },
 };

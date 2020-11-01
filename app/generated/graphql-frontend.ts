@@ -59,6 +59,7 @@ export type Post = {
   __typename?: 'Post';
   idx: Scalars['Int'];
   contents: Scalars['String'];
+  writer_idx: Scalars['Int'];
 };
 
 export type Query = {

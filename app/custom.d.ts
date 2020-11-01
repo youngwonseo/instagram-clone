@@ -1,4 +1,4 @@
-// process.env에 포함하기 위한 
+// process.env에 포함하기 위한 정의
 declare namespace NodeJS {
   interface ProcessEnv {
     MYSQL_HOST: localhost;

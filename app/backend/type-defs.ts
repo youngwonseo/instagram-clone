@@ -49,6 +49,7 @@ export const typeDefs = gql`
   type Post {
     idx: Int!
     contents: String!
+    writer_idx: Int!
   }
 
 

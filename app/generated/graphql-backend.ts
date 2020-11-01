@@ -59,6 +59,7 @@ export type Post = {
   __typename?: 'Post';
   idx: Scalars['Int'];
   contents: Scalars['String'];
+  writer_idx: Scalars['Int'];
 };
 
 export type Query = {
@@ -262,6 +263,7 @@ export type UserResolvers<ContextType = any, ParentType extends ResolversParentT
 export type PostResolvers<ContextType = any, ParentType extends ResolversParentTypes['Post'] = ResolversParentTypes['Post']> = ResolversObject<{
   idx?: Resolver<ResolversTypes['Int'], ParentType, ContextType>;
   contents?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
+  writer_idx?: Resolver<ResolversTypes['Int'], ParentType, ContextType>;
   __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 }>;
 
