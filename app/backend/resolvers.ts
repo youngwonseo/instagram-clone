@@ -163,48 +163,48 @@ export const resolvers: Resolvers<ApolloContext> = {
       await context.db.query("DELETE FROM tasks WHERE id = ?", [args.id]);
       return task;
     },
-    async createPost(parent, args: { input: { contents: string } }, context) {
-      const result = await context.db.query<OkPacket>(
-        "INSERT INTO posts (contents, writer_idx) VALUES(?, ?)",
-        [args.input.contents, 1]
-      );
-      return {
-        idx: result.insertId,
-        contents: args.input.contents,
-        writer_idx: 1,
-      };
-    },
-    async updatePost(parent, args: { input: { idx: number, contents: string } }, context) {
-      const result = await context.db.query(
-        "UPDATE posts SET contents = ? WHERE idx = ? ",
-        [args.input.contents, args.input.idx]
-      );
+    // async createPost(parent, args: { input: { contents: string } }, context) {
+    //   const result = await context.db.query<OkPacket>(
+    //     "INSERT INTO posts (contents, writer_idx) VALUES(?, ?)",
+    //     [args.input.contents, 1]
+    //   );
+    //   return {
+    //     idx: result.insertId,
+    //     contents: args.input.contents,
+    //     writer_idx: 1,
+    //   };
+    // },
+    // async updatePost(parent, args: { input: { idx: number, contents: string } }, context) {
+    //   const result = await context.db.query(
+    //     "UPDATE posts SET contents = ? WHERE idx = ? ",
+    //     [args.input.contents, args.input.idx]
+    //   );
 
-      const updatedPost = await context.db.query<PostsDbQueryResult>(
-        "SELECT * FROM posts WHERE idx = ? ",
-        [args.input.idx]
-      );
-      return updatedPost.length > 0 ? {
-        idx: updatedPost[0].idx,
-        contents: updatedPost[0].contents,
-        writer_idx: updatedPost[0].writer_idx
-      } : null;
-    },
-    async deletePost(parent, args, context){
-      const posts = await context.db.query<PostsDbQueryResult>(
-        "SELECT * FROM posts WHERE idx = ? ",
-        [args.idx]
-      );
+    //   const updatedPost = await context.db.query<PostsDbQueryResult>(
+    //     "SELECT * FROM posts WHERE idx = ? ",
+    //     [args.input.idx]
+    //   );
+    //   return updatedPost.length > 0 ? {
+    //     idx: updatedPost[0].idx,
+    //     contents: updatedPost[0].contents,
+    //     writer_idx: updatedPost[0].writer_idx
+    //   } : null;
+    // },
+    // async deletePost(parent, args, context){
+    //   const posts = await context.db.query<PostsDbQueryResult>(
+    //     "SELECT * FROM posts WHERE idx = ? ",
+    //     [args.idx]
+    //   );
 
-      if(posts.length > 0){
-        await context.db.query('DELETE FROM posts WHERE idx = ? ', [args.idx]);
-      }
+    //   if(posts.length > 0){
+    //     await context.db.query('DELETE FROM posts WHERE idx = ? ', [args.idx]);
+    //   }
 
-      return posts.length > 0 ? {
-        idx: posts[0].idx,
-        contents: posts[0].contents,
-        writer_idx: posts[0].writer_idx
-      } : null;
-    }
+    //   return posts.length > 0 ? {
+    //     idx: posts[0].idx,
+    //     contents: posts[0].contents,
+    //     writer_idx: posts[0].writer_idx
+    //   } : null;
+    // }
   },
 };
