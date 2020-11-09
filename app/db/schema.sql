@@ -1,7 +1,9 @@
+DROP TABLE IF EXISTS comments;
 DROP TABLE IF EXISTS posts;
 DROP TABLE IF EXISTS follows;
 DROP TABLE IF EXISTS users;
 DROP TABLE IF EXISTS tasks;
+
 
 CREATE TABLE IF NOT EXISTS tasks (
   id INT UNSIGNED AUTO_INCREMENT,
@@ -19,6 +21,7 @@ CREATE TABLE IF NOT EXISTS users (
   hashed_password VARCHAR(255) NOT NULL,
   PRIMARY KEY (idx)
 );
+INSERT INTO users(idx, username, email, hashed_password) values(1, 'youngwon','jazz9008@gmail.com','123');
 
 
 CREATE TABLE IF NOT EXISTS follows (
@@ -34,8 +37,16 @@ CREATE TABLE IF NOT EXISTS follows (
 CREATE TABLE IF NOT EXISTS posts (
   idx INT UNSIGNED AUTO_INCREMENT,
   contents VARCHAR(255) NOT NULL,
-  img_url VARCHAR(255) NOT NULL,
-  writer_idx INT UNSIGNED NOT NULL,
+  -- img_url VARCHAR(255) NOT NULL,
+  -- writer_idx INT UNSIGNED NOT NULL,
+  PRIMARY KEY (idx)
+  -- FOREIGN KEY (writer_idx) REFERENCES users (idx)
+);
+
+CREATE TABLE IF NOT EXISTS comments (
+  idx INT UNSIGNED AUTO_INCREMENT,
+  post_idx INT UNSIGNED NOT NULL,
+  contents VARCHAR(255) NOT NULL,
   PRIMARY KEY (idx),
-  FOREIGN KEY (writer_idx) REFERENCES users (idx)
+  FOREIGN KEY (post_idx) REFERENCES posts (idx)
 );

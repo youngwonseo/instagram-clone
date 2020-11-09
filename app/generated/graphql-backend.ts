@@ -47,6 +47,11 @@ export type UpdatePostInput = {
   contents: Scalars['String'];
 };
 
+export type CreateCommentInput = {
+  post_idx: Scalars['Int'];
+  contents: Scalars['String'];
+};
+
 export type User = {
   __typename?: 'User';
   idx: Scalars['Int'];
@@ -59,7 +64,13 @@ export type Post = {
   __typename?: 'Post';
   idx: Scalars['Int'];
   contents: Scalars['String'];
-  writer_idx: Scalars['Int'];
+};
+
+export type Comment = {
+  __typename?: 'Comment';
+  idx: Scalars['Int'];
+  post_idx: Scalars['Int'];
+  contents: Scalars['String'];
 };
 
 export type Query = {
@@ -71,6 +82,7 @@ export type Query = {
   task?: Maybe<Task>;
   posts: Array<Post>;
   post?: Maybe<Post>;
+  comments: Array<Comment>;
 };
 
 
@@ -93,6 +105,11 @@ export type QueryPostArgs = {
   idx: Scalars['Int'];
 };
 
+
+export type QueryCommentsArgs = {
+  post_idx: Scalars['Int'];
+};
+
 export type Mutation = {
   __typename?: 'Mutation';
   createTask?: Maybe<Task>;
@@ -101,6 +118,7 @@ export type Mutation = {
   createPost?: Maybe<Post>;
   updatePost?: Maybe<Post>;
   deletePost?: Maybe<Post>;
+  createComment?: Maybe<Comment>;
 };
 
 
@@ -131,6 +149,11 @@ export type MutationUpdatePostArgs = {
 
 export type MutationDeletePostArgs = {
   idx: Scalars['Int'];
+};
+
+
+export type MutationCreateCommentArgs = {
+  input: CreateCommentInput;
 };
 
 export type WithIndex<TObject> = TObject & Record<string, any>;
@@ -221,8 +244,10 @@ export type ResolversTypes = ResolversObject<{
   UpdateTaskInput: UpdateTaskInput;
   CreatePostInput: CreatePostInput;
   UpdatePostInput: UpdatePostInput;
+  CreateCommentInput: CreateCommentInput;
   User: ResolverTypeWrapper<User>;
   Post: ResolverTypeWrapper<Post>;
+  Comment: ResolverTypeWrapper<Comment>;
   Query: ResolverTypeWrapper<{}>;
   Mutation: ResolverTypeWrapper<{}>;
   Boolean: ResolverTypeWrapper<Scalars['Boolean']>;
@@ -238,8 +263,10 @@ export type ResolversParentTypes = ResolversObject<{
   UpdateTaskInput: UpdateTaskInput;
   CreatePostInput: CreatePostInput;
   UpdatePostInput: UpdatePostInput;
+  CreateCommentInput: CreateCommentInput;
   User: User;
   Post: Post;
+  Comment: Comment;
   Query: {};
   Mutation: {};
   Boolean: Scalars['Boolean'];
@@ -263,7 +290,13 @@ export type UserResolvers<ContextType = any, ParentType extends ResolversParentT
 export type PostResolvers<ContextType = any, ParentType extends ResolversParentTypes['Post'] = ResolversParentTypes['Post']> = ResolversObject<{
   idx?: Resolver<ResolversTypes['Int'], ParentType, ContextType>;
   contents?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
-  writer_idx?: Resolver<ResolversTypes['Int'], ParentType, ContextType>;
+  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
+}>;
+
+export type CommentResolvers<ContextType = any, ParentType extends ResolversParentTypes['Comment'] = ResolversParentTypes['Comment']> = ResolversObject<{
+  idx?: Resolver<ResolversTypes['Int'], ParentType, ContextType>;
+  post_idx?: Resolver<ResolversTypes['Int'], ParentType, ContextType>;
+  contents?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
   __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 }>;
 
@@ -275,6 +308,7 @@ export type QueryResolvers<ContextType = any, ParentType extends ResolversParent
   task?: Resolver<Maybe<ResolversTypes['Task']>, ParentType, ContextType, RequireFields<QueryTaskArgs, 'id'>>;
   posts?: Resolver<Array<ResolversTypes['Post']>, ParentType, ContextType>;
   post?: Resolver<Maybe<ResolversTypes['Post']>, ParentType, ContextType, RequireFields<QueryPostArgs, 'idx'>>;
+  comments?: Resolver<Array<ResolversTypes['Comment']>, ParentType, ContextType, RequireFields<QueryCommentsArgs, 'post_idx'>>;
 }>;
 
 export type MutationResolvers<ContextType = any, ParentType extends ResolversParentTypes['Mutation'] = ResolversParentTypes['Mutation']> = ResolversObject<{
@@ -284,12 +318,14 @@ export type MutationResolvers<ContextType = any, ParentType extends ResolversPar
   createPost?: Resolver<Maybe<ResolversTypes['Post']>, ParentType, ContextType, RequireFields<MutationCreatePostArgs, 'input'>>;
   updatePost?: Resolver<Maybe<ResolversTypes['Post']>, ParentType, ContextType, RequireFields<MutationUpdatePostArgs, 'input'>>;
   deletePost?: Resolver<Maybe<ResolversTypes['Post']>, ParentType, ContextType, RequireFields<MutationDeletePostArgs, 'idx'>>;
+  createComment?: Resolver<Maybe<ResolversTypes['Comment']>, ParentType, ContextType, RequireFields<MutationCreateCommentArgs, 'input'>>;
 }>;
 
 export type Resolvers<ContextType = any> = ResolversObject<{
   Task?: TaskResolvers<ContextType>;
   User?: UserResolvers<ContextType>;
   Post?: PostResolvers<ContextType>;
+  Comment?: CommentResolvers<ContextType>;
   Query?: QueryResolvers<ContextType>;
   Mutation?: MutationResolvers<ContextType>;
 }>;

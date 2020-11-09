@@ -6,8 +6,6 @@ import { schema } from '../../backend/schema';
 const apolloServer = new ApolloServer({
   schema,
   context: ({ req }) => {
-    console.log(req);
-
     return { db };
   },
 });

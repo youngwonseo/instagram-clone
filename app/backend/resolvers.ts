@@ -3,6 +3,7 @@ import { ServerlessMysql } from 'serverless-mysql';
 import { OkPacket} from 'mysql';
 import { UserInputError } from "apollo-server-micro";
 import { isContext } from "vm";
+import CommentList from "../components/post/CommentList";
 
 interface ApolloContext {
   db: ServerlessMysql;
@@ -34,12 +35,17 @@ interface UserDbRow {
 interface PostDbRow {
   idx: number;
   contents: string;
-  writer_idx: any;
 }
 
 type PostsDbQueryResult = PostDbRow[];
 
+interface CommentDbRow {
+  idx: number;
+  post_idx: number;
+  contents: string;
+}
 
+type CommentsDbQueryResult = CommentDbRow[];
 
 
 /** Follow */
@@ -119,6 +125,14 @@ export const resolvers: Resolvers<ApolloContext> = {
       await context.db.end();
       return posts;
     },
+    async comments(parent, args, context) {
+      const comments = await context.db.query<CommentsDbQueryResult>(
+        "SELECT * FROM comments WHERE post_idx = ?",
+        [args.post_idx]
+      );
+      await context.db.end();
+      return comments;
+    },
   },
   Mutation: {
     async createTask(parent, args: { input: { title: string } }, context) {
@@ -163,17 +177,16 @@ export const resolvers: Resolvers<ApolloContext> = {
       await context.db.query("DELETE FROM tasks WHERE id = ?", [args.id]);
       return task;
     },
-    // async createPost(parent, args: { input: { contents: string } }, context) {
-    //   const result = await context.db.query<OkPacket>(
-    //     "INSERT INTO posts (contents, writer_idx) VALUES(?, ?)",
-    //     [args.input.contents, 1]
-    //   );
-    //   return {
-    //     idx: result.insertId,
-    //     contents: args.input.contents,
-    //     writer_idx: 1,
-    //   };
-    // },
+    async createPost(parent, args: { input: { contents: string } }, context) {
+      const result = await context.db.query<OkPacket>(
+        "INSERT INTO posts (contents) VALUES(?)",
+        [args.input.contents]
+      );
+      return {
+        idx: result.insertId,
+        contents: args.input.contents,
+      };
+    },
     // async updatePost(parent, args: { input: { idx: number, contents: string } }, context) {
     //   const result = await context.db.query(
     //     "UPDATE posts SET contents = ? WHERE idx = ? ",
@@ -206,5 +219,21 @@ export const resolvers: Resolvers<ApolloContext> = {
     //     writer_idx: posts[0].writer_idx
     //   } : null;
     // }
+    async createComment(
+      parent,
+      args: { input: { post_idx: number; contents: string } },
+      context
+    ) {
+      const result = await context.db.query<OkPacket>(
+        "INSERT INTO comments (post_idx, contents) VALUES(?, ?)",
+        [args.input.post_idx, args.input.contents]
+      );
+      
+      return {
+        idx: result.insertId,
+        post_idx: args.input.post_idx,
+        contents: args.input.contents,
+      };
+    },
   },
 };

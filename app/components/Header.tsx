@@ -5,11 +5,18 @@ import { shadow } from '../lib/styles/styleUtils';
 
 
 const HeaderWrapper = styled.header`
+  /* position: fixed; */
+  /* top: 0;
+  left: 0;
+  right: 0; */
   position: sticky;
+
   /* top: 0; */
   display: flex;
+  justify-content: space-between;
   align-items: center;
-  background-color: 'white';
+  background-color: white;
+  width: 100%;
   height: 54px;
   ${shadow(1)};
 `;

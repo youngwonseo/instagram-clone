@@ -47,6 +47,11 @@ export type UpdatePostInput = {
   contents: Scalars['String'];
 };
 
+export type CreateCommentInput = {
+  post_idx: Scalars['Int'];
+  contents: Scalars['String'];
+};
+
 export type User = {
   __typename?: 'User';
   idx: Scalars['Int'];
@@ -59,7 +64,13 @@ export type Post = {
   __typename?: 'Post';
   idx: Scalars['Int'];
   contents: Scalars['String'];
-  writer_idx: Scalars['Int'];
+};
+
+export type Comment = {
+  __typename?: 'Comment';
+  idx: Scalars['Int'];
+  post_idx: Scalars['Int'];
+  contents: Scalars['String'];
 };
 
 export type Query = {
@@ -71,6 +82,7 @@ export type Query = {
   task?: Maybe<Task>;
   posts: Array<Post>;
   post?: Maybe<Post>;
+  comments: Array<Comment>;
 };
 
 
@@ -93,6 +105,11 @@ export type QueryPostArgs = {
   idx: Scalars['Int'];
 };
 
+
+export type QueryCommentsArgs = {
+  post_idx: Scalars['Int'];
+};
+
 export type Mutation = {
   __typename?: 'Mutation';
   createTask?: Maybe<Task>;
@@ -101,6 +118,7 @@ export type Mutation = {
   createPost?: Maybe<Post>;
   updatePost?: Maybe<Post>;
   deletePost?: Maybe<Post>;
+  createComment?: Maybe<Comment>;
 };
 
 
@@ -133,6 +151,11 @@ export type MutationDeletePostArgs = {
   idx: Scalars['Int'];
 };
 
+
+export type MutationCreateCommentArgs = {
+  input: CreateCommentInput;
+};
+
 export type AuthenticateQueryVariables = Exact<{
   input: AuthenticateInput;
 }>;
@@ -146,6 +169,32 @@ export type AuthenticateQuery = (
   )> }
 );
 
+export type CommentsQueryVariables = Exact<{
+  post_idx: Scalars['Int'];
+}>;
+
+
+export type CommentsQuery = (
+  { __typename?: 'Query' }
+  & { comments: Array<(
+    { __typename?: 'Comment' }
+    & Pick<Comment, 'idx' | 'post_idx' | 'contents'>
+  )> }
+);
+
+export type CreateCommentMutationVariables = Exact<{
+  input: CreateCommentInput;
+}>;
+
+
+export type CreateCommentMutation = (
+  { __typename?: 'Mutation' }
+  & { createComment?: Maybe<(
+    { __typename?: 'Comment' }
+    & Pick<Comment, 'idx' | 'post_idx' | 'contents'>
+  )> }
+);
+
 export type CreatePostMutationVariables = Exact<{
   input: CreatePostInput;
 }>;
@@ -155,7 +204,7 @@ export type CreatePostMutation = (
   { __typename?: 'Mutation' }
   & { createPost?: Maybe<(
     { __typename?: 'Post' }
-    & Pick<Post, 'idx' | 'contents' | 'writer_idx'>
+    & Pick<Post, 'idx' | 'contents'>
   )> }
 );
 
@@ -257,12 +306,80 @@ export function useAuthenticateLazyQuery(baseOptions?: Apollo.LazyQueryHookOptio
 export type AuthenticateQueryHookResult = ReturnType<typeof useAuthenticateQuery>;
 export type AuthenticateLazyQueryHookResult = ReturnType<typeof useAuthenticateLazyQuery>;
 export type AuthenticateQueryResult = Apollo.QueryResult<AuthenticateQuery, AuthenticateQueryVariables>;
+export const CommentsDocument = gql`
+    query Comments($post_idx: Int!) {
+  comments(post_idx: $post_idx) {
+    idx
+    post_idx
+    contents
+  }
+}
+    `;
+
+/**
+ * __useCommentsQuery__
+ *
+ * To run a query within a React component, call `useCommentsQuery` and pass it any options that fit your needs.
+ * When your component renders, `useCommentsQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useCommentsQuery({
+ *   variables: {
+ *      post_idx: // value for 'post_idx'
+ *   },
+ * });
+ */
+export function useCommentsQuery(baseOptions?: Apollo.QueryHookOptions<CommentsQuery, CommentsQueryVariables>) {
+        return Apollo.useQuery<CommentsQuery, CommentsQueryVariables>(CommentsDocument, baseOptions);
+      }
+export function useCommentsLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<CommentsQuery, CommentsQueryVariables>) {
+          return Apollo.useLazyQuery<CommentsQuery, CommentsQueryVariables>(CommentsDocument, baseOptions);
+        }
+export type CommentsQueryHookResult = ReturnType<typeof useCommentsQuery>;
+export type CommentsLazyQueryHookResult = ReturnType<typeof useCommentsLazyQuery>;
+export type CommentsQueryResult = Apollo.QueryResult<CommentsQuery, CommentsQueryVariables>;
+export const CreateCommentDocument = gql`
+    mutation CreateComment($input: CreateCommentInput!) {
+  createComment(input: $input) {
+    idx
+    post_idx
+    contents
+  }
+}
+    `;
+export type CreateCommentMutationFn = Apollo.MutationFunction<CreateCommentMutation, CreateCommentMutationVariables>;
+
+/**
+ * __useCreateCommentMutation__
+ *
+ * To run a mutation, you first call `useCreateCommentMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useCreateCommentMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [createCommentMutation, { data, loading, error }] = useCreateCommentMutation({
+ *   variables: {
+ *      input: // value for 'input'
+ *   },
+ * });
+ */
+export function useCreateCommentMutation(baseOptions?: Apollo.MutationHookOptions<CreateCommentMutation, CreateCommentMutationVariables>) {
+        return Apollo.useMutation<CreateCommentMutation, CreateCommentMutationVariables>(CreateCommentDocument, baseOptions);
+      }
+export type CreateCommentMutationHookResult = ReturnType<typeof useCreateCommentMutation>;
+export type CreateCommentMutationResult = Apollo.MutationResult<CreateCommentMutation>;
+export type CreateCommentMutationOptions = Apollo.BaseMutationOptions<CreateCommentMutation, CreateCommentMutationVariables>;
 export const CreatePostDocument = gql`
     mutation CreatePost($input: CreatePostInput!) {
   createPost(input: $input) {
     idx
     contents
-    writer_idx
   }
 }
     `;

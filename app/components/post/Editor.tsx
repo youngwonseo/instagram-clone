@@ -10,16 +10,10 @@ const Editor: React.FC<Props> = ({ form, handleChange, handleSubmit }) => {
   return (
     <form onSubmit={handleSubmit}>
       <p>
-        <textarea onChange={()=>{
-          
-        }} >
-          {form && form.contents}
-        </textarea>
+        <textarea name="contents" onChange={handleChange} value={form.contents}/>
       </p>
       <p>
-        <button type="submit">
-          Write
-        </button>
+        <button type="submit">Write</button>
       </p>
     </form>
   );

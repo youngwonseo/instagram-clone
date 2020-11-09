@@ -1,0 +1,7 @@
+query Comments($post_idx: Int!) {
+  comments(post_idx: $post_idx) {
+    idx
+    post_idx
+    contents
+  }
+}

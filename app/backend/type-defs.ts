@@ -8,7 +8,6 @@ export const typeDefs = gql`
     password: String!
   }
   
-  
   enum TaskStatus {
     active
     completed
@@ -39,6 +38,11 @@ export const typeDefs = gql`
     contents: String!
   }
 
+  input CreateCommentInput {
+    post_idx: Int!
+    contents: String!
+  }
+
   type User {
     idx: Int!
     username: String!
@@ -49,7 +53,12 @@ export const typeDefs = gql`
   type Post {
     idx: Int!
     contents: String!
-    writer_idx: Int!
+  }
+  
+  type Comment {
+    idx: Int!
+    post_idx: Int!
+    contents: String!
   }
 
 
@@ -61,6 +70,7 @@ export const typeDefs = gql`
     task(id: Int!): Task
     posts: [Post!]!
     post(idx: Int!): Post
+    comments(post_idx: Int!): [Comment!]!
   }
 
   type Mutation {
@@ -70,5 +80,6 @@ export const typeDefs = gql`
     createPost(input: CreatePostInput!): Post
     updatePost(input: UpdatePostInput!): Post
     deletePost(idx: Int!): Post
+    createComment(input: CreateCommentInput!): Comment
   }
 `;
