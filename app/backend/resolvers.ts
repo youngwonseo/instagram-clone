@@ -228,12 +228,25 @@ export const resolvers: Resolvers<ApolloContext> = {
         "INSERT INTO comments (post_idx, contents) VALUES(?, ?)",
         [args.input.post_idx, args.input.contents]
       );
-      
+
       return {
         idx: result.insertId,
         post_idx: args.input.post_idx,
         contents: args.input.contents,
       };
+    },
+    async singleUpload(_, {file}, context) {
+      
+      const { filename, mimetype, encoding } = await file;
+      
+      console.log(filename, mimetype, encoding);
+      
+
+      return {
+        filename: '1',
+        mimetype: '1',
+        encoding: '1'
+      }
     },
   },
 };

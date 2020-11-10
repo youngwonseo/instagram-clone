@@ -1,4 +1,4 @@
-import { ApolloServer, AuthenticationError } from 'apollo-server-micro'
+import { ApolloServer, AuthenticationError } from 'apollo-server-micro';
 import { db } from '../../backend/db';
 import { schema } from '../../backend/schema';
 
@@ -7,7 +7,6 @@ import { schema } from '../../backend/schema';
 const apolloServer = new ApolloServer({
   schema,
   context: ({ req }) => {
-
     // if(!req.headers.authorization)
     //   throw new AuthenticationError("missing token!");
 
@@ -16,7 +15,7 @@ const apolloServer = new ApolloServer({
     // if(!user) throw new AuthenticationError("invalid token!");
     // return { user, db };
     return { db };
-  },
+  },  
 });
 
 export const config = {
@@ -25,4 +24,5 @@ export const config = {
   },
 }
 
-export default apolloServer.createHandler({ path: '/api/graphql' })
+// export default apolloServer.listen(); //({ path: '/api/graphql' })
+export default apolloServer.createHandler({ path: '/api/graphql' });

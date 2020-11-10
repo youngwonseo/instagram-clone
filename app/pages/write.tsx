@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { GetServerSideProps } from 'next';
 import Editor from '../components/post/Editor';
-import { useCreatePostMutation } from '../generated/graphql-frontend';
+import { useCreatePostMutation, useSingleUploadMutation } from '../generated/graphql-frontend';
 
 const Write: React.FC = () => {
 
@@ -15,6 +15,10 @@ const Write: React.FC = () => {
     }
   });
 
+  const [singleUpload, {  }] = useSingleUploadMutation({
+    onCompleted: () => {},
+  });
+
   useEffect(()=>{
     console.log(error);
   },[error])
@@ -23,12 +27,28 @@ const Write: React.FC = () => {
     //result.refetch;
   };
 
-  const handleChange = (e: React.ChangeEvent<HTMLInputElement> | React.ChangeEvent<HTMLFormElement>) => {
-    const { name, value } = e.target;
-    setForm({
-      ...form,
-      [name]: value,
-    });
+  const handleChange = async (e: React.ChangeEvent<HTMLInputElement> | React.ChangeEvent<HTMLFormElement>) => {
+    
+    const files = e.target.files;
+    if(files && files.length === 1){
+      const file = files[0];
+      
+      await singleUpload({
+        variables: { file: file },
+      });
+
+      
+      
+
+    }else{
+      const { name, value } = e.target;
+      setForm({
+        ...form,
+        [name]: value,
+      });
+    }
+
+
     // console.log(form);
   };
 
@@ -38,7 +58,7 @@ const Write: React.FC = () => {
     e.preventDefault();
     if(!loading){
       try{
-        await createPost({variables: {input: form }});
+        await createPost({ variables: { input: form } });
       }catch(e){
         console.log(e);
       }

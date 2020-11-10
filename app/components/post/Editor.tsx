@@ -10,6 +10,7 @@ const Editor: React.FC<Props> = ({ form, handleChange, handleSubmit }) => {
   return (
     <form onSubmit={handleSubmit}>
       <p>
+        <input type="file" onChange={handleChange}/>
         <textarea name="contents" onChange={handleChange} value={form.contents}/>
       </p>
       <p>

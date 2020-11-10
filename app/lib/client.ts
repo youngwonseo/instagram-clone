@@ -1,6 +1,7 @@
-import { useMemo } from 'react'
-import { ApolloClient, InMemoryCache } from '@apollo/client'
-
+import { useMemo } from 'react';
+import { ApolloClient, InMemoryCache } from '@apollo/client';
+import { createUploadLink } from 'apollo-upload-client';
+import { ApolloLink } from 'apollo-link';
 
 type MyApolloCache = any;
 let apolloClient: ApolloClient<MyApolloCache> | undefined;
@@ -11,22 +12,36 @@ function createIsomorphLink() {
     const { SchemaLink } = require('@apollo/client/link/schema');
     const { schema } = require('../backend/schema');
     const { db } = require('../backend/db');
-    return new SchemaLink({ schema, context: { db } });
+
+   
+    const schemaLink = new SchemaLink({ schema, context: { db } });
+    
+   
+    return schemaLink;
+    
   } else {
     const { HttpLink } = require('@apollo/client/link/http');
-    return new HttpLink({
+    const httpLink = new HttpLink({
       uri: '/api/graphql',
       credentials: 'same-origin',
     });
+
+    // return httpLink;
+    return createUploadLink({
+      uri: '/api/graphql'
+    })
+      
+
+
   }
 }
 
 function createApolloClient() {
   return new ApolloClient({
-    ssrMode: typeof window === 'undefined',
+    ssrMode: typeof window === "undefined",
     link: createIsomorphLink(),
     cache: new InMemoryCache(),
-  })
+  });
 }
 
 export function initializeApollo(initialState: MyApolloCache | null = null) {

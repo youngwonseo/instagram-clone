@@ -1,4 +1,4 @@
-import { GraphQLResolveInfo } from 'graphql';
+import { GraphQLResolveInfo, GraphQLScalarType, GraphQLScalarTypeConfig } from 'graphql';
 export type Maybe<T> = T | null;
 export type Exact<T extends { [key: string]: unknown }> = { [K in keyof T]: T[K] };
 export type RequireFields<T, K extends keyof T> = { [X in Exclude<keyof T, K>]?: T[X] } & { [P in K]-?: NonNullable<T[P]> };
@@ -9,7 +9,9 @@ export type Scalars = {
   Boolean: boolean;
   Int: number;
   Float: number;
+  Upload: any;
 };
+
 
 export type AuthenticateInput = {
   email: Scalars['String'];
@@ -73,6 +75,13 @@ export type Comment = {
   contents: Scalars['String'];
 };
 
+export type File = {
+  __typename?: 'File';
+  filename: Scalars['String'];
+  mimetype: Scalars['String'];
+  encoding: Scalars['String'];
+};
+
 export type Query = {
   __typename?: 'Query';
   authenticate?: Maybe<User>;
@@ -83,6 +92,7 @@ export type Query = {
   posts: Array<Post>;
   post?: Maybe<Post>;
   comments: Array<Comment>;
+  uploads?: Maybe<Array<Maybe<File>>>;
 };
 
 
@@ -119,6 +129,7 @@ export type Mutation = {
   updatePost?: Maybe<Post>;
   deletePost?: Maybe<Post>;
   createComment?: Maybe<Comment>;
+  singleUpload: File;
 };
 
 
@@ -154,6 +165,11 @@ export type MutationDeletePostArgs = {
 
 export type MutationCreateCommentArgs = {
   input: CreateCommentInput;
+};
+
+
+export type MutationSingleUploadArgs = {
+  file: Scalars['Upload'];
 };
 
 export type WithIndex<TObject> = TObject & Record<string, any>;
@@ -235,6 +251,7 @@ export type DirectiveResolverFn<TResult = {}, TParent = {}, TContext = {}, TArgs
 
 /** Mapping between all available schema types and the resolvers types */
 export type ResolversTypes = ResolversObject<{
+  Upload: ResolverTypeWrapper<Scalars['Upload']>;
   AuthenticateInput: AuthenticateInput;
   String: ResolverTypeWrapper<Scalars['String']>;
   TaskStatus: TaskStatus;
@@ -248,6 +265,7 @@ export type ResolversTypes = ResolversObject<{
   User: ResolverTypeWrapper<User>;
   Post: ResolverTypeWrapper<Post>;
   Comment: ResolverTypeWrapper<Comment>;
+  File: ResolverTypeWrapper<File>;
   Query: ResolverTypeWrapper<{}>;
   Mutation: ResolverTypeWrapper<{}>;
   Boolean: ResolverTypeWrapper<Scalars['Boolean']>;
@@ -255,6 +273,7 @@ export type ResolversTypes = ResolversObject<{
 
 /** Mapping between all available schema types and the resolvers parents */
 export type ResolversParentTypes = ResolversObject<{
+  Upload: Scalars['Upload'];
   AuthenticateInput: AuthenticateInput;
   String: Scalars['String'];
   Task: Task;
@@ -267,10 +286,15 @@ export type ResolversParentTypes = ResolversObject<{
   User: User;
   Post: Post;
   Comment: Comment;
+  File: File;
   Query: {};
   Mutation: {};
   Boolean: Scalars['Boolean'];
 }>;
+
+export interface UploadScalarConfig extends GraphQLScalarTypeConfig<ResolversTypes['Upload'], any> {
+  name: 'Upload';
+}
 
 export type TaskResolvers<ContextType = any, ParentType extends ResolversParentTypes['Task'] = ResolversParentTypes['Task']> = ResolversObject<{
   id?: Resolver<ResolversTypes['Int'], ParentType, ContextType>;
@@ -300,6 +324,13 @@ export type CommentResolvers<ContextType = any, ParentType extends ResolversPare
   __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 }>;
 
+export type FileResolvers<ContextType = any, ParentType extends ResolversParentTypes['File'] = ResolversParentTypes['File']> = ResolversObject<{
+  filename?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
+  mimetype?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
+  encoding?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
+  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
+}>;
+
 export type QueryResolvers<ContextType = any, ParentType extends ResolversParentTypes['Query'] = ResolversParentTypes['Query']> = ResolversObject<{
   authenticate?: Resolver<Maybe<ResolversTypes['User']>, ParentType, ContextType, RequireFields<QueryAuthenticateArgs, 'input'>>;
   me?: Resolver<Maybe<ResolversTypes['User']>, ParentType, ContextType>;
@@ -309,6 +340,7 @@ export type QueryResolvers<ContextType = any, ParentType extends ResolversParent
   posts?: Resolver<Array<ResolversTypes['Post']>, ParentType, ContextType>;
   post?: Resolver<Maybe<ResolversTypes['Post']>, ParentType, ContextType, RequireFields<QueryPostArgs, 'idx'>>;
   comments?: Resolver<Array<ResolversTypes['Comment']>, ParentType, ContextType, RequireFields<QueryCommentsArgs, 'post_idx'>>;
+  uploads?: Resolver<Maybe<Array<Maybe<ResolversTypes['File']>>>, ParentType, ContextType>;
 }>;
 
 export type MutationResolvers<ContextType = any, ParentType extends ResolversParentTypes['Mutation'] = ResolversParentTypes['Mutation']> = ResolversObject<{
@@ -319,13 +351,16 @@ export type MutationResolvers<ContextType = any, ParentType extends ResolversPar
   updatePost?: Resolver<Maybe<ResolversTypes['Post']>, ParentType, ContextType, RequireFields<MutationUpdatePostArgs, 'input'>>;
   deletePost?: Resolver<Maybe<ResolversTypes['Post']>, ParentType, ContextType, RequireFields<MutationDeletePostArgs, 'idx'>>;
   createComment?: Resolver<Maybe<ResolversTypes['Comment']>, ParentType, ContextType, RequireFields<MutationCreateCommentArgs, 'input'>>;
+  singleUpload?: Resolver<ResolversTypes['File'], ParentType, ContextType, RequireFields<MutationSingleUploadArgs, 'file'>>;
 }>;
 
 export type Resolvers<ContextType = any> = ResolversObject<{
+  Upload?: GraphQLScalarType;
   Task?: TaskResolvers<ContextType>;
   User?: UserResolvers<ContextType>;
   Post?: PostResolvers<ContextType>;
   Comment?: CommentResolvers<ContextType>;
+  File?: FileResolvers<ContextType>;
   Query?: QueryResolvers<ContextType>;
   Mutation?: MutationResolvers<ContextType>;
 }>;

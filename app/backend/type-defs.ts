@@ -3,6 +3,8 @@ import { gql } from "apollo-server-micro";
 
 export const typeDefs = gql`
 
+  scalar Upload
+
   input AuthenticateInput {
     email: String!
     password: String!
@@ -76,6 +78,7 @@ export const typeDefs = gql`
     posts: [Post!]!
     post(idx: Int!): Post
     comments(post_idx: Int!): [Comment!]!
+    uploads: [File]
   }
 
   type Mutation {
@@ -86,5 +89,6 @@ export const typeDefs = gql`
     updatePost(input: UpdatePostInput!): Post
     deletePost(idx: Int!): Post
     createComment(input: CreateCommentInput!): Comment
+    singleUpload(file: Upload!): File!
   }
 `;
