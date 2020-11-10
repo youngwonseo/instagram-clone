@@ -61,8 +61,13 @@ export const typeDefs = gql`
     contents: String!
   }
 
+  type File {
+    filename: String!
+    mimetype: String!
+    encoding: String!
+  }
 
-  type Query {
+  type Query {  
     authenticate(input: AuthenticateInput!): User
     me: User
     users: [User]

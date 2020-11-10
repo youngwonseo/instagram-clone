@@ -15,7 +15,7 @@ const CommentList: React.FC<Props> = ({ comments }) => {
   return (
     <CommentListWrapper>
       {comments &&
-        comments.map((comment: any) => <Comment contents={comment.contents} />)}
+        comments.map((comment: any) => <Comment key={comment.idx} contents={comment.contents} />)}
     </CommentListWrapper>
   );
 };

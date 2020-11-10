@@ -20,7 +20,7 @@ const TimeLine: React.FC = () => {
   const posts =result.data?.posts;
   
   useEffect(()=>{
-    console.log(result);
+    // console.log(result);
   },[result]);
 
 
