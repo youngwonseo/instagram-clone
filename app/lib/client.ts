@@ -1,6 +1,5 @@
 import { useMemo } from 'react';
 import { ApolloClient, InMemoryCache } from '@apollo/client';
-import { createUploadLink } from 'apollo-upload-client';
 import { ApolloLink } from 'apollo-link';
 
 type MyApolloCache = any;
@@ -25,14 +24,12 @@ function createIsomorphLink() {
       uri: '/api/graphql',
       credentials: 'same-origin',
     });
-
+    const { createUploadLink } = require('apollo-upload-client');
     // return httpLink;
     return createUploadLink({
-      uri: '/api/graphql'
-    })
-      
-
-
+      uri: '/api/graphql',
+      credentials: 'same-origin',
+    });
   }
 }
 

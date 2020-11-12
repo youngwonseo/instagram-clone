@@ -235,18 +235,56 @@ export const resolvers: Resolvers<ApolloContext> = {
         contents: args.input.contents,
       };
     },
-    async singleUpload(_, {file}, context) {
+    async singleUpload(parent, args, context) {
+
+      const file = await args.file;
+
+      const rs = file.file.createReadStream();
+
+      let chunk;
+      rs.on('readable', () => {
+        while (null !== (chunk = rs.read(13))) {        
+          
+          // console.log(chunk.toString(), "\nline");
+        }
+      });
       
-      const { filename, mimetype, encoding } = await file;
+      rs.on('end', () => {    // stream에 데이터가 더 이상 남아있지 않는 경우 발생하는 이벤트
+        console.log('end');
+      });
+
+      // return args.file.then((file: any) => {
+      //   //Contents of Upload scalar: https://github.com/jaydenseric/graphql-upload#class-graphqlupload
+      //   //file.createReadStream() is a readable node stream that contains the contents of the uploaded file
+      //   //node stream api: https://nodejs.org/api/stream.html
+      //   console.log(file);
+      //   const readStream = file.createReadStream()
+      //   let chunk;
+      //   readStream.on('readable', () => {   // stream에 데이터가 남아있는 경우 자동으로 발생하는 이벤트
+      //     // 가끔 다 읽지 않았을 때 chunk가 null일 경우가 있다.
+      //     while (null !== (chunk = file.read(13))) {        // read의 buffer 크기: 13
+      //         console.log(chunk.toString(), "\nline");
+      //     }
+      //   });
+      //   readStream.on('end', () => {    // stream에 데이터가 더 이상 남아있지 않는 경우 발생하는 이벤트
+      //       console.log('end');
+      //   });
+
+
+      //   return file;
+      // });
+      // return file;
+      // const { filename, mimetype, encoding } = await file;
       
-      console.log(filename, mimetype, encoding);
+      // console.log(filename, mimetype, encoding);
       
+      // file.createReadStream() 
 
       return {
         filename: '1',
         mimetype: '1',
-        encoding: '1'
-      }
+        encoding: '1',
+      };
     },
   },
 };

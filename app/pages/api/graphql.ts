@@ -10,6 +10,7 @@ const apolloServer = new ApolloServer({
     // if(!req.headers.authorization)
     //   throw new AuthenticationError("missing token!");
 
+    // console.log(req.headers['content-type'])
     // const token = req.headers.authroization.substr(7);
     // const user = users.find((user) => user.token === token);
     // if(!user) throw new AuthenticationError("invalid token!");
