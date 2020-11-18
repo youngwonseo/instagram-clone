@@ -50,6 +50,7 @@ export const typeDefs = gql`
     username: String!
     email: String!
     hashed_password: String!
+    token: String!
   }
 
   type Post {
@@ -70,7 +71,7 @@ export const typeDefs = gql`
   }
 
   type Query {  
-    authenticate(input: AuthenticateInput!): User
+    authenticate(input: AuthenticateInput!): String
     me: User
     users: [User]
     tasks(status: TaskStatus): [Task!]!

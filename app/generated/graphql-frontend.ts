@@ -60,6 +60,7 @@ export type User = {
   username: Scalars['String'];
   email: Scalars['String'];
   hashed_password: Scalars['String'];
+  token: Scalars['String'];
 };
 
 export type Post = {
@@ -84,7 +85,7 @@ export type File = {
 
 export type Query = {
   __typename?: 'Query';
-  authenticate?: Maybe<User>;
+  authenticate?: Maybe<Scalars['String']>;
   me?: Maybe<User>;
   users?: Maybe<Array<Maybe<User>>>;
   tasks: Array<Task>;
@@ -179,10 +180,7 @@ export type AuthenticateQueryVariables = Exact<{
 
 export type AuthenticateQuery = (
   { __typename?: 'Query' }
-  & { authenticate?: Maybe<(
-    { __typename?: 'User' }
-    & Pick<User, 'idx' | 'username' | 'email' | 'hashed_password'>
-  )> }
+  & Pick<Query, 'authenticate'>
 );
 
 export type CommentsQueryVariables = Exact<{
@@ -301,12 +299,7 @@ export type UpdatePostMutation = (
 
 export const AuthenticateDocument = gql`
     query Authenticate($input: AuthenticateInput!) {
-  authenticate(input: $input) {
-    idx
-    username
-    email
-    hashed_password
-  }
+  authenticate(input: $input)
 }
     `;
 
@@ -326,7 +319,7 @@ export const AuthenticateDocument = gql`
  *   },
  * });
  */
-export function useAuthenticateQuery(baseOptions?: Apollo.QueryHookOptions<AuthenticateQuery, AuthenticateQueryVariables>) {
+export function useAuthenticateQuery(baseOptions: Apollo.QueryHookOptions<AuthenticateQuery, AuthenticateQueryVariables>) {
         return Apollo.useQuery<AuthenticateQuery, AuthenticateQueryVariables>(AuthenticateDocument, baseOptions);
       }
 export function useAuthenticateLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<AuthenticateQuery, AuthenticateQueryVariables>) {
@@ -361,7 +354,7 @@ export const CommentsDocument = gql`
  *   },
  * });
  */
-export function useCommentsQuery(baseOptions?: Apollo.QueryHookOptions<CommentsQuery, CommentsQueryVariables>) {
+export function useCommentsQuery(baseOptions: Apollo.QueryHookOptions<CommentsQuery, CommentsQueryVariables>) {
         return Apollo.useQuery<CommentsQuery, CommentsQueryVariables>(CommentsDocument, baseOptions);
       }
 export function useCommentsLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<CommentsQuery, CommentsQueryVariables>) {
@@ -494,7 +487,7 @@ export const PostDocument = gql`
  *   },
  * });
  */
-export function usePostQuery(baseOptions?: Apollo.QueryHookOptions<PostQuery, PostQueryVariables>) {
+export function usePostQuery(baseOptions: Apollo.QueryHookOptions<PostQuery, PostQueryVariables>) {
         return Apollo.useQuery<PostQuery, PostQueryVariables>(PostDocument, baseOptions);
       }
 export function usePostLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<PostQuery, PostQueryVariables>) {

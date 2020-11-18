@@ -28,6 +28,7 @@ interface UserDbRow {
   username: string;
   email: string;
   hashed_password: string;
+  token: string;
 }
 
 
@@ -86,7 +87,7 @@ export const resolvers: Resolvers<ApolloContext> = {
         "SELECT username FROM users WHERE email = ? and hashed_password = ?",
         [args.input.email, args.input.password]
       );
-      return user;
+      return user && user.token;
     },
     // me(parent, args, context) {
 

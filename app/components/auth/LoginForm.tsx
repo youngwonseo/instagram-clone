@@ -12,6 +12,7 @@ const LoginForm = () => {
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
+    
   };
 
   const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {

@@ -60,6 +60,7 @@ export type User = {
   username: Scalars['String'];
   email: Scalars['String'];
   hashed_password: Scalars['String'];
+  token: Scalars['String'];
 };
 
 export type Post = {
@@ -84,7 +85,7 @@ export type File = {
 
 export type Query = {
   __typename?: 'Query';
-  authenticate?: Maybe<User>;
+  authenticate?: Maybe<Scalars['String']>;
   me?: Maybe<User>;
   users?: Maybe<Array<Maybe<User>>>;
   tasks: Array<Task>;
@@ -308,6 +309,7 @@ export type UserResolvers<ContextType = any, ParentType extends ResolversParentT
   username?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
   email?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
   hashed_password?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
+  token?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
   __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 }>;
 
@@ -332,7 +334,7 @@ export type FileResolvers<ContextType = any, ParentType extends ResolversParentT
 }>;
 
 export type QueryResolvers<ContextType = any, ParentType extends ResolversParentTypes['Query'] = ResolversParentTypes['Query']> = ResolversObject<{
-  authenticate?: Resolver<Maybe<ResolversTypes['User']>, ParentType, ContextType, RequireFields<QueryAuthenticateArgs, 'input'>>;
+  authenticate?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType, RequireFields<QueryAuthenticateArgs, 'input'>>;
   me?: Resolver<Maybe<ResolversTypes['User']>, ParentType, ContextType>;
   users?: Resolver<Maybe<Array<Maybe<ResolversTypes['User']>>>, ParentType, ContextType>;
   tasks?: Resolver<Array<ResolversTypes['Task']>, ParentType, ContextType, RequireFields<QueryTasksArgs, never>>;
