@@ -1,9 +1,14 @@
 import React from 'react';
 import { GetServerSideProps } from 'next';
-import LoginForm from '../components/login/LoginForm';
+import AuthTemplate from '../components/auth/AuthTemplate';
+import LoginForm from '../components/auth/LoginForm';
 
 const Login: React.FC = () => {
-  return <LoginForm/>;
+  return (
+    <AuthTemplate>
+      <LoginForm />
+    </AuthTemplate>
+  );
 };
 
 

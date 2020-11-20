@@ -1,9 +1,11 @@
 import React, { useState } from 'react';
 import styled from 'styled-components';
+import Link from 'next/link';
 import { useAuthenticateQuery } from '../../generated/graphql-frontend';
 
-const RegisterFormWrapper = styled.div`
-
+const RegisterFormWrapper = styled.form`
+  display: flex;
+  flex-direction: column;
 `;
 
 const RegisterForm = () =>{
@@ -20,21 +22,19 @@ const RegisterForm = () =>{
   const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
 
-    const result = useAuthenticateQuery({
-      variables: { input: { email, password } },
-    });
-
     
+
+
 
   }
 
   return (
-    <RegisterFormWrapper>
-      <form onSubmit={handleSubmit}>
+    <RegisterFormWrapper onSubmit={handleSubmit}>
         <input name="email" onChange={handleChange} />
         <input name="username" onChange={handleChange} />
         <input name="password" onChange={handleChange} />
-      </form>
+        <button>register</button>
+        <Link href="/login">back</Link>
     </RegisterFormWrapper>
   );
 };

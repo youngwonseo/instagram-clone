@@ -31,6 +31,8 @@ interface UserDbRow {
   token: string;
 }
 
+type UserDbQueryResult = UserDbRow[];
+
 
 /** Post */
 interface PostDbRow {
@@ -58,12 +60,9 @@ type CommentsDbQueryResult = CommentDbRow[];
 
 /** File */
 
+
+
 /** HashTag */
-
-
-
-
-
 const getTaskById = async (id: number, db: ServerlessMysql ) => {
   const tasks = await db.query<TaskDbQueryResult>(
     "SELECT id, title, task_status FROM tasks WHERE id = ?",
@@ -83,11 +82,13 @@ export const resolvers: Resolvers<ApolloContext> = {
   Query: {
     //codegen 후 params의 타입이 정해짐
     async authenticate(parent, args, context) {
-      const user = await context.db.query<UserDbRow>(
-        "SELECT username FROM users WHERE email = ? and hashed_password = ?",
+      const users = await context.db.query<UserDbQueryResult>(
+        "SELECT token FROM users WHERE email = ? and hashed_password = ?",
         [args.input.email, args.input.password]
       );
-      return user && user.token;
+      // return user && user.token;
+      const result = users.length ? users[0].token : null;
+      return result
     },
     // me(parent, args, context) {
 

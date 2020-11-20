@@ -2,9 +2,14 @@ import React from 'react';
 import { GetServerSideProps } from 'next';
 
 import RegisterForm from '../components/auth/RegisterForm';
+import AuthTemplate from '../components/auth/AuthTemplate';
 
 const Register: React.FC = () => {
-  return <RegisterForm/>;
+  return (
+    <AuthTemplate>
+      <RegisterForm />
+    </AuthTemplate>
+  );
 };
 
 

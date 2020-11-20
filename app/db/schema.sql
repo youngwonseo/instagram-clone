@@ -13,15 +13,16 @@ CREATE TABLE IF NOT EXISTS tasks (
 );
 
 
-DROP TABLE IF EXISTS users;
+
 CREATE TABLE IF NOT EXISTS users (
   idx INT UNSIGNED AUTO_INCREMENT,
   username VARCHAR(255) NOT NULL,
   email VARCHAR(255) NOT NULL,
   hashed_password VARCHAR(255) NOT NULL,
+  token VARCHAR(255),
   PRIMARY KEY (idx)
 );
-INSERT INTO users(idx, username, email, hashed_password) values(1, 'youngwon','jazz9008@gmail.com','123');
+INSERT INTO users(username, email, hashed_password, token) values('youngwon','jazz9008@gmail.com','123','token1112');
 
 
 CREATE TABLE IF NOT EXISTS follows (
