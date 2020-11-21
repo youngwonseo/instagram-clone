@@ -39,15 +39,17 @@ CREATE TABLE IF NOT EXISTS posts (
   idx INT UNSIGNED AUTO_INCREMENT,
   contents VARCHAR(255) NOT NULL,
   -- img_url VARCHAR(255) NOT NULL,
-  -- writer_idx INT UNSIGNED NOT NULL,
-  PRIMARY KEY (idx)
-  -- FOREIGN KEY (writer_idx) REFERENCES users (idx)
+  writer_idx INT UNSIGNED NOT NULL,
+  PRIMARY KEY (idx),
+  FOREIGN KEY (writer_idx) REFERENCES users (idx)
 );
 
 CREATE TABLE IF NOT EXISTS comments (
   idx INT UNSIGNED AUTO_INCREMENT,
-  post_idx INT UNSIGNED NOT NULL,
+  post_idx INT UNSIGNED NOT NULL, 
   contents VARCHAR(255) NOT NULL,
+  writer_idx INT UNSIGNED NOT NULL,
   PRIMARY KEY (idx),
-  FOREIGN KEY (post_idx) REFERENCES posts (idx)
+  FOREIGN KEY (post_idx) REFERENCES posts (idx),
+  FOREIGN KEY (writer_idx) REFERENCES users (idx)
 );

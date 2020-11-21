@@ -58,7 +58,7 @@ const Write: React.FC = () => {
     e.preventDefault();
     if(!loading){
       try{
-        await createPost({ variables: { input: form } });
+        await createPost({ variables: { input: form },  });
       }catch(e){
         console.log(e);
       }

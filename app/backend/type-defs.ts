@@ -70,6 +70,11 @@ export const typeDefs = gql`
     encoding: String!
   }
 
+  # type Authenticate {
+  #   toekn: String!
+  #   username: String!
+  # }
+
   type Query {  
     authenticate(input: AuthenticateInput!): String
     me: User

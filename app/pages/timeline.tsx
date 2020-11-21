@@ -2,8 +2,8 @@ import React, { useEffect } from 'react';
 import { GetServerSideProps } from 'next';
 import { usePostsQuery } from '../generated/graphql-frontend';
 import PostList from '../components/post/PostList';
-
 import styled from 'styled-components';
+import storage from '../lib/storage';
 
 const TimeLineWrapper = styled.div`
   display: flex;
@@ -14,18 +14,18 @@ const TimeLineWrapper = styled.div`
 
 const TimeLine: React.FC = () => {
 
-  
   const result = usePostsQuery({});
   
   const posts =result.data?.posts;
   
   useEffect(()=>{
-    // console.log(result);
+    // console.log(storage.get('token'));
   },[result]);
 
 
   return (
     <TimeLineWrapper>
+
       {result.loading && !posts ? (
         <p>Loading...</p>
       ) : result.error ? (

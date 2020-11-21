@@ -1,6 +1,8 @@
 import { useMemo } from 'react';
 import { ApolloClient, InMemoryCache } from '@apollo/client';
+import { setContext } from '@apollo/client/link/context';
 import { ApolloLink } from 'apollo-link';
+import storage from './storage';
 
 type MyApolloCache = any;
 let apolloClient: ApolloClient<MyApolloCache> | undefined;
@@ -14,8 +16,7 @@ function createIsomorphLink() {
 
    
     const schemaLink = new SchemaLink({ schema, context: { db } });
-    
-   
+     
     return schemaLink;
     
   } else {
@@ -23,13 +24,31 @@ function createIsomorphLink() {
     const httpLink = new HttpLink({
       uri: '/api/graphql',
       credentials: 'same-origin',
+      
     });
+        
+    const authLink = setContext((_, { headers }) => {
+      // get the authentication token from local storage if it exists
+      const token = storage.get('token');
+
+      console.log(token);
+      // return the headers to the context so httpLink can read them
+      return {
+        headers: {
+          ...headers,
+          authorization: token ? `Bearer ${token}` : "",
+        }
+      }
+    });
+
     const { createUploadLink } = require('apollo-upload-client');
     // return httpLink;
-    return createUploadLink({
-      uri: '/api/graphql',
-      credentials: 'same-origin',
-    });
+    return authLink.concat(
+      createUploadLink({
+        uri: "/api/graphql",
+        credentials: "same-origin",
+      })
+    );
   }
 }
 

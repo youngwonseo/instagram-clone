@@ -1,6 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import styled from 'styled-components';
 import Link from 'next/link';
+import { useRouter } from 'next/dist/client/router';
+import storage from '../../lib/storage';
 import { useAuthenticateQuery, useAuthenticateLazyQuery } from '../../generated/graphql-frontend';
 
 import { stringify } from 'querystring';
@@ -19,10 +21,13 @@ const LoginForm = () => {
     password: "123",
   });
 
+  const router = useRouter();
+
   useEffect(()=>{    
     if(auth && auth.authenticate){
       //로그인 성공
-      console.log(auth.authenticate);
+      storage.set('token', auth.authenticate);
+      router.push('/timeline');
     }else{
       //로그인 실패
 
