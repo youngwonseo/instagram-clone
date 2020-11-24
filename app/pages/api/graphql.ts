@@ -15,6 +15,9 @@ const apolloServer = new ApolloServer({
     // const user = users.find((user) => user.token === token);
     // if(!user) throw new AuthenticationError("invalid token!");
     // return { user, db };
+    console.log(req.headers.authorization);
+
+
     return { db };
   },  
 });

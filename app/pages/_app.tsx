@@ -10,6 +10,7 @@ const GlobalStyle = createGlobalStyle`
     margin: 0;
     padding: 0;
     box-sizing: border-box;
+    background-color: #f8f9fa;
   }
   html {
     box-sizing: border-box;
@@ -17,6 +18,7 @@ const GlobalStyle = createGlobalStyle`
   }
   body>div {
     height: 100%;
+    
   }
 `
 const theme = {

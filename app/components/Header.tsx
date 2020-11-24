@@ -8,8 +8,7 @@ const HeaderWrapper = styled.header`
   position: fixed;
   top: 0;
   left: 0;
-  right: 0;
-  
+  right: 0;  
   
   display: flex;
   justify-content: space-between;
@@ -17,7 +16,7 @@ const HeaderWrapper = styled.header`
   background-color: white;
   
   height: 54px;
-  border-bottom: 1px solid #868e96;
+  border-bottom: 1px solid #ced4da;
   padding: 0px 30%;
 `;
 
@@ -54,7 +53,7 @@ const Header: React.FC = () => {
         <Link href="/timeline">Home</Link>
         <Link href="/dm">DM</Link>
         <Link href="/explore">explore</Link>
-
+        <Link href="/accounts">account</Link>
       </ButtonGroup>
     </HeaderWrapper>
   );
