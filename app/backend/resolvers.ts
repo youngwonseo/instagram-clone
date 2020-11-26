@@ -92,6 +92,7 @@ export const resolvers: Resolvers<ApolloContext> = {
     },
     // me(parent, args, context) {
 
+    
     // },
     //parent는 User object
     async tasks(parent, args, context) {

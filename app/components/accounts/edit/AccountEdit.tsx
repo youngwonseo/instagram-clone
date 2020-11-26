@@ -28,7 +28,7 @@ const AccountEdit: React.FC<Props> = ({ }) => {
     <AccountEditWrapper>
       <form onSubmit={handleSubmit}>
         <div>
-
+          
         </div>
         <div>
           <label>이름</label>
