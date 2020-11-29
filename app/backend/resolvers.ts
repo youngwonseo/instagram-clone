@@ -181,8 +181,10 @@ export const resolvers: Resolvers<ApolloContext> = {
       return task;
     },
     async createPost(parent, args: { input: { contents: string } }, context) {
+
+      console.log('createPost')
       const result = await context.db.query<OkPacket>(
-        "INSERT INTO posts (contents) VALUES(?)",
+        "INSERT INTO posts (contents, writer_idx) VALUES(?, 1)",
         [args.input.contents]
       );
       return {

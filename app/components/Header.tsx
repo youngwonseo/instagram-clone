@@ -4,6 +4,12 @@ import styled from 'styled-components';
 import { shadow } from '../lib/styles/styleUtils';
 
 
+import HomeIcon from './common/icons/HomeIcon';
+import DirectIcon from './common/icons/DirectIcon';
+import ExploreIcon from './common/icons/ExploreIcon';
+
+
+
 const HeaderWrapper = styled.header`
   position: fixed;
   top: 0;
@@ -49,10 +55,18 @@ const Header: React.FC = () => {
       <SearchPanel>
         <input type="text"/>
       </SearchPanel>
+
       <ButtonGroup>
-        <Link href="/timeline">Home</Link>
-        <Link href="/dm">DM</Link>
-        <Link href="/explore">explore</Link>
+        <Link href="/">
+          <HomeIcon/>
+        </Link>
+        <Link href="/dm">
+          <DirectIcon/>
+        </Link>
+        <Link href="/explore">
+          <ExploreIcon/>          
+        </Link>
+
         <Link href="/accounts">account</Link>
       </ButtonGroup>
     </HeaderWrapper>

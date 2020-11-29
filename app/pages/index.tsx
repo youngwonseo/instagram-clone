@@ -1,37 +1,39 @@
 import Head from 'next/head'
 
 import { initializeApollo } from '../lib/client';
-import { useTasksQuery, TasksQuery, TasksDocument } from '../generated/graphql-frontend';
+import { usePostsQuery } from '../generated/graphql-frontend';
+import { useEffect } from 'react';
+import Template from '../components/common/Template';
+import PostList from '../components/post/PostList';
+
 
 
 export default function Home() {
-  const result = useTasksQuery();
-  const tasks = result.data?.tasks;
+  
+  const result = usePostsQuery({});
+  
+  const posts =result.data?.posts;
+  
+  useEffect(()=>{
+    // console.log(storage.get('token'));
+  },[result]);
 
   return (
-    <div>
-      {tasks && tasks.length > 0 && tasks.map((task) => {
-        return (
-          <div key={task.id}>
-            {task.title} ({task.status})
-          </div>
-        );
-      })}
-    </div>
+    <Template>
+      {result.loading && !posts ? (
+        <p>Loading...</p>
+      ) : result.error ? (
+        <p>error occured.</p>
+      ) : posts && posts.length > 0 ? (
+        <PostList posts={posts} />
+      ) : (
+        <p>no data</p>
+      )}
+    </Template>
   );
 }
 
 // render static site ( before rendering)
 export const getStaticProps = async () => {
-  const apolloClient = initializeApollo();
-  //store cache
-  await apolloClient.query<TasksQuery>({
-    query: TasksDocument,
-  });
-
-  return {
-    props: {
-      initializeApolloState: apolloClient.cache.extract(),
-    }    
-  }
+  return { props: {} };
 }
